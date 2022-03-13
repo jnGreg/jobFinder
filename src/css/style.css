@@ -1,6 +1,14 @@
 body {
 	margin: 0;
 	text-align: center;
+}
+
+body.dark-theme {
+	color: white;
+	background: #121212;
+}
+
+body.light-theme{
 	color: black;
 	background: #EEFCFF;
 }
