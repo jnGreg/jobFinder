@@ -1,5 +1,5 @@
 # JobFinder
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+
 
 ##  Project Description
 Jobfinder is an educational  project that scrapes job offers on https://justjoin.it 
