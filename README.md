@@ -19,6 +19,7 @@ ___
 - [Heroku] - Deploy for Crawler and Website 
 - [Postgres] - Postgres db hosted on Heroku (Hobby Dev plan) 
 - [Bootstrap] - Open-source CSS framework 
+- [W3schools.css] - Open-source CSS framework 
 
 
 [//]: # (These are reference links http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
@@ -29,6 +30,6 @@ ___
    [Heroku]: <https://www.heroku.com>
    [Postgres]: <https://www.heroku.com/postgresm>
    [Bootstrap]: <https://getbootstrap.com>
-
+   [W3schools.css] - <https://www.w3schools.com/w3css/4>
 
 
