@@ -20,7 +20,7 @@ ___
 - [Postgres] - Postgres db hosted on Heroku (Hobby Dev plan) 
 - [React] - A JavaScript library for building user interfaces
 - [Bootstrap] - front-end open source toolkit
-- [Figma] -  vector graphics editor and prototyping tool
+
 
 
 [//]: # (These are reference links http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
