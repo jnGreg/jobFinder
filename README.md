@@ -18,8 +18,9 @@ ___
 - [FastAPI] - Web framework for building APIs with Python
 - [Heroku] - Deploy for Crawler and Website 
 - [Postgres] - Postgres db hosted on Heroku (Hobby Dev plan) 
-- [Bootstrap] - Open-source CSS framework 
-- [W3schools.css] - Open-source CSS framework 
+- [React] - A JavaScript library for building user interfaces
+- [Bootstrap] - front-end open source toolkit
+- [Figma] -  vector graphics editor and prototyping tool
 
 
 [//]: # (These are reference links http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
@@ -29,7 +30,8 @@ ___
    [FastAPI]:  <https://fastapi.tiangolo.com>
    [Heroku]: <https://www.heroku.com>
    [Postgres]: <https://www.heroku.com/postgresm>
+   [React]: <https://pl.reactjs.org>
+   [Figma]: <https://www.figma.com/?fuid=>
    [Bootstrap]: <https://getbootstrap.com>
-   [W3schools.css]: <https://www.w3schools.com/w3css/4>
 
 
