@@ -12,3 +12,429 @@ body.light-theme{
 	color: black;
 	background: #EEFCFF;
 }
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  margin-bottom: 15px;
+}
+
+
+.w3-dropdown-hover {
+	white-space: nowrap;
+	padding: 2px;
+}
+
+h1 {
+	font-size: 27px;
+	font-family: Arial Black; 
+	cursor: default;
+}
+
+h3 {
+	font-size: 18px;
+	border-bottom: 2px solid black;
+	font-family: Arial; 
+	color: black;
+	display: block;
+	cursor: pointer;
+}
+
+p { font-size: 16px;
+	padding-top: 2px;
+	font-family: Verdana 
+	color: darkgrey;
+	cursor: default;
+
+}
+
+#sort-form{
+	float: right;
+}
+
+li.nav-item {
+	font-size: 20px;
+	padding-bottom: 4px;
+	padding-left: 5px; 
+}
+
+link {
+	
+}
+
+#category_list {
+	border: 2px solid green;
+	border-radius: 5px 10px 5px 10px;
+}
+
+
+#profilowe {
+	height: 250px;
+	width: 180px;
+}
+
+h6 { font-size: 12px;
+	color: darkgreen;
+}
+
+main {
+	width: 100%;
+	margin: auto;
+	padding: 2px;
+}
+
+article.offer{
+	background-color: white;
+	text-align: left;
+	margin: 10px;
+	padding: 10px;
+}
+
+#container
+{
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 70px;
+	margin-bottom: 80px;
+	padding: 2px;
+
+}
+
+
+#container_search
+{
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 2px;
+}
+
+select {
+	width: 100px;
+	height: 40px;
+	display: inline-block;
+	position: relative;
+}
+
+#filtr_kategoria{
+	width:250px;
+}
+
+#filtr_od {
+	width:100px;
+}
+
+#filtr_do {
+	width:100px;
+}
+
+#filtr_stan {
+	width:250px;
+}
+
+
+#bok_lewy
+{
+	float: left;
+	width: 300px;
+	align-content: center;
+	margin-left: 10px;
+	text-align: left;
+	padding: 10px;
+	margin-bottom: 15px;
+}
+
+
+#bok_prawy
+{
+	float: left;
+	width: 1800px;
+	align-content: center;
+	margin-right: 20px;
+	margin-left: 20px;
+	text-align: left;
+	padding-left: 50px;
+	margin-bottom: 15px;
+}
+
+#klauzula {
+	clear: both;
+	color: darkgrey;
+	border: 2px solid green;
+	border-radius: 5px 10px 5px 10px;
+}
+
+.navbar{
+	min-height: 60px;
+}
+
+.kategorie
+{
+	text-align: center;
+}
+
+ol#liczebnosc li {
+	display:inline;
+	font-size:13px
+}
+
+ol#seller_data li {
+	display:block;
+	font-size:13px;
+	padding:10px;
+}
+
+article.offer a{
+	display:inline;
+}
+
+
+
+.kategorie img
+{
+	border-radius: 50%;
+	width: 100%;
+	height: auto;
+	min-height: 120px;
+	max-height: 120px;
+	min-width: 120px;
+}
+
+article.offer{
+	align-content: left;
+}
+
+
+
+a.artykul_nazwa {
+	font-size: 24px;
+}
+
+aside.artykul_cena {
+	float:right;
+	font-size: 24px;
+}
+
+#inputSort {
+	width: 200px;
+	margin: 5px;
+}
+
+.kategorie p
+{
+	margin-bottom: 30px;
+}
+
+.kategorie figcaption
+{
+	margin-top: 8px;
+}
+
+.btn-success {
+	font-family: Tahoma;
+	
+}
+
+
+#category_list {
+	font-size: 12px;
+}
+
+
+#container_tender
+{
+	float: left;
+	width: 1200px;
+	align-content: center;
+	margin-left: 10px;
+	text-align: left;
+	padding: 10px;
+	margin-bottom: 15px;
+}
+
+#tender_image{
+	float: center;
+	width: 600px;
+	height: 600px;
+	align-content: center;
+	text-align: left;
+	margin-bottom: 5px;
+	border: 2px solid green;
+}
+
+
+
+#container_contact
+{
+	float: left;
+	width: 400px;
+	align-content: center;
+	margin-right: 10px;
+	margin-left: 10px;
+	text-align: center;
+	margin-bottom: 25px;
+	border: 2px solid green;
+	border-radius: 15px 20px 15px 20px;
+}
+
+#container_delivery
+{
+	float: left;
+	width: 400px;
+	align-content: center;
+	margin-right: 10px;
+	margin-left: 10px;
+	text-align: center;
+	margin-bottom: 15px;
+	border: 2px solid green;
+	border-radius: 15px 20px 15px 20px;
+}
+
+
+#tender_info {
+	float: center;
+	width: 800px;
+	align-content: center;
+	margin-left: 30px;
+	text-align: left;
+	padding: 25px;
+	margin-bottom: 25px;
+	border: 2px solid green;
+	border-radius: 15px 20px 15px 20px;
+}
+
+
+.map-container-5{
+	overflow:hidden;
+	padding-bottom:56.25%;
+	position:relative;
+	height:0;
+}
+.map-container-5 iframe{
+	left:0;
+	top:0;
+	height:100%;
+	width:100%;
+	position:absolute;
+}
+
+#tender_price {
+	float:left;
+	font-size:30px;
+}
+
+ol#tender_footer li {
+	display:inline;
+	float: left;
+	margin: 0 10px;
+	padding: 0 0px;
+}
+
+.kategorie img {
+	border-radius: 50%;
+}
+
+#add_min_price_input{
+	display:none;
+}
+
+#add_end_price_input{
+	display:none;
+}
+
+#bid_form {
+        float: right;
+        width: 100px;
+}
+
+.mapContainer{
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+    height: 600px;
+    display: block;
+}
+
+
+.map{
+    width: 100%;
+    height: 100%;
+}
+
+.selectCities{
+    margin: 0 auto;
+    display: block;
+    width: 400px;
+    height: 150px;
+    margin-bottom: 50px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.selectCities label{
+    display: block;
+    margin: 5px;
+}
+
+.voivodship{
+    position: relative;
+}
+
+.voivodship:hover{
+    fill: red;
+}
+
+.voivodship.active{
+    fill: green;
+}
+
+.city{
+    fill: black;
+    stroke: red;
+}
+
+.rangeContainer,
+.searchContainer,
+.checkContainer{
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.checkContainer input,
+.checkContainer label{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.search{
+    width: 50%;
+}
+
+.mapSize{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+text{
+    opacity: 0;
+    visibility: hidden;
+    font-size: 30px;
+    fill: black;
+    stroke: black;
+    transition: all .3s linear;
+}
+
+@media(max-width: 600px){
+    text{
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.city:hover + text{
+    visibility: visible;
+    opacity: 1;
+}
