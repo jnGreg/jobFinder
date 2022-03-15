@@ -24,21 +24,27 @@
 
 	<main><center>
 			<div id = "container" style="width: 1000px;">
-				<center> <h1> Szybkie wyszukiwanie</h1><br>
-					<form class="form-inline"> <div class="form-group mb-2">
-						<input class="form-control mr-1" type="search" placeholder="Słowa kluczowe..." aria-label="wyszukaj" id = "item" name = "k" autocomplete="off" style="width:500px;" maxlength=75 minlength=3 required> 
-						</div><div class="form-group mb-2">
-						<select class="form-control" id="voivodeship" name="voivodeship" style="width:175px;">
-							<option value="" selected>Cała Polska...</option>
+				<center> <h1> Quick search</h1><br>
+					<form class="form-inline"> <div class="form-group">
+						<input class="form-control" type="search" placeholder="Keywords..." aria-label="wyszukaj" id = "item" name = "k" autocomplete="off" style="width:500px; float:left;" maxlength=75 minlength=3 required> 
+						</div><div class="form-group">
+						<select class="form-control" id="voivodeship" name="voivodeship" style="width:175px; float:left; padding-left:10px; margin-left:20px;">
+							<option value="" selected>Location...</option>
+						
+						</select></div>
+
+						<div class="form-group">
+						<select class="form-control" id="voivodeship" name="voivodeship" style="width:175px; float:left; margin-left:20px;">
+							<option value="" selected></option>
 						
 						</select></div>
 							
 						<div style="padding-left: 10px;">
-						<button class="btn btn-success" type="submit">Szukaj </button> </div>
+						<button class="btn btn-success" type="submit" style="width:60px;" >Go </button> </div>
 						</form>
 
 						<br><br><br><br>
-						<h1 style="margin-left: 50px;">Przeglądaj wg technologii</h1>
+						<h1 style="margin-left: 50px;">By technology</h1>
 						<br><br>
 						<section class="kategorie">
 							<div class="row justify-content-center">
