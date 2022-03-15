@@ -30,6 +30,6 @@ ___
    [Heroku]: <https://www.heroku.com>
    [Postgres]: <https://www.heroku.com/postgresm>
    [Bootstrap]: <https://getbootstrap.com>
-   [W3schools.css] - <https://www.w3schools.com/w3css/4>
+   [W3schools.css]: <https://www.w3schools.com/w3css/4>
 
 
