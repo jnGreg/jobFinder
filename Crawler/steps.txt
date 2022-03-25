@@ -1,0 +1,11 @@
+# create project
+scrapy startproject jobs
+
+# folder with spider 
+cd jobs
+
+# run crawler 
+scrapy crawl jobs
+
+# save offers to json
+scrapy crawl jobs -o offers.json
