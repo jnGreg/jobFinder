@@ -10,5 +10,12 @@ class JobsSpider(scrapy.Spider):
 
     def parse(self, response):
         data=json.loads(response.body)
-        yield from  data
-    
+        list_of_links=[]
+        [list_of_links.append('https://justjoin.it/api/offers/'+ data[i]['id']) for i,_ in enumerate(data)]
+
+        with open("list_of_links.txt", 'w') as file:
+            file.write('\n'.join(list_of_links))
+        
+        file.close()
+
+
