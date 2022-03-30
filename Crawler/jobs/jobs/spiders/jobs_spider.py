@@ -10,12 +10,12 @@ class JobsSpider(scrapy.Spider):
 
     def parse(self, response):
         data=json.loads(response.body)
-        list_of_links=[]
-        [list_of_links.append('https://justjoin.it/api/offers/'+ data[i]['id']) for i,_ in enumerate(data)]
+        list_of_links=['https://justjoin.it/api/offers/'+ data[i]['id'] for i,_ in enumerate(data)]
 
-        with open("list_of_links.txt", 'w') as file:
-            file.write('\n'.join(list_of_links))
+        with open("lista4.json", 'w') as f:
+            # indent=2 is not needed but makes the file human-readable 
+            # if the data is nested
+            json.dump(list_of_links, f, indent=2) 
         
-        file.close()
-
+        f.close()
 
