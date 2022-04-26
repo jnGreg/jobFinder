@@ -6,7 +6,6 @@ from Crawler.jobs.jobs.middlewares import JobsSpiderMiddleware, JobsDownloaderMi
 from Crawler.jobs.jobs.pipelines import JobsPipeline
 from Crawler.jobs.jobs.spiders.jobs_spider import JobsSpider
 import pathlib
-import os
 
 ji = JobsItem()
 jsm = JobsSpiderMiddleware()
