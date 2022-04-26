@@ -4,9 +4,9 @@ import unittest
 from Crawler.jobs.jobs.items import JobsItem
 from Crawler.jobs.jobs.middlewares import JobsSpiderMiddleware, JobsDownloaderMiddleware
 from Crawler.jobs.jobs.pipelines import JobsPipeline
-
-from Crawler.jobs.jobs.spiders.test import *
 from Crawler.jobs.jobs.spiders.jobs_spider import JobsSpider
+import pathlib
+import os
 
 ji = JobsItem()
 jsm = JobsSpiderMiddleware()
@@ -45,6 +45,16 @@ class JobsSpiderTest(unittest.TestCase):
     def test_if_present_spider(self):
         self.assertIsInstance(js, JobsSpider)
 
+    def test_file_exists(self):
+        path = pathlib.Path('Crawler\jobs\lista4.json')
+        self.assertEquals((str(path), path.is_file()), (str(path), True))
+
+    def test_file_not_empty(self):
+        path = pathlib.Path('Crawler\jobs\lista4.json')
+        self.assertNotEmpty(path)
+
+    def assertNotEmpty(self, path):
+        pass
 
 
 
