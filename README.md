@@ -9,6 +9,7 @@ ___
 - Display basic information, filtering and sorting (Location, technologies, salary, seniority, Employment Type etc.) that allow you to specify job advertisements that interest you
 - Reference to original job offer
 - Keyword search
+- data visualisation
 
 ## Technologies
 
@@ -16,8 +17,7 @@ ___
 - [PHP] - website programming language, version 8.1.6
 - [Scrapy] - Framework for extracting the data from websites.
 - [re] - Build in python module for finding patterns in text 
-- [FastAPI] - Web framework for building APIs with Python
-- [Heroku] - Deploy for Crawler and Website 
+- [000Webhost] - Deploy for Crawler and Website 
 - [MySQL] - SQL db hosted on Heroku (Hobby Dev plan) 
 - [jQuery] - a fast, small, and feature-rich JavaScript library
 - [Bootstrap] - front-end open source toolkit
@@ -30,8 +30,7 @@ ___
    [PHP]: <https://www.php.net/downloads/>
    [Scrapy]: <https://scrapy.org>
    [re]: <https://docs.python.org/3/library/re.html>
-   [FastAPI]:  <https://fastapi.tiangolo.com>
-   [Heroku]: <https://www.heroku.com>
+   [000Webhost]: <https://pl.000webhost.com>
    [MySQL]: <https://www.mysql.com/downloads/>
    [React]: <https://pl.reactjs.org>
    [Figma]: <https://www.figma.com/?fuid=>
