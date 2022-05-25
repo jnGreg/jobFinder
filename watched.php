@@ -29,7 +29,20 @@ include ('includes/config.inc.php');
 
 	<main>
 		<div id = "container_search"> <br><br><br><br><h4> Watched offers </h4> <br>
+		
+						
+					
+					<div class="form-group" style="padding: 8px; width:450px; display: block; float:left;"> 
+					
+						</div>
+						
+						</div>
+		<div id = "right_flank" style=" min-height: 450px;">
+			<div style="padding-left: 15px; padding-right: 10px; display:inline-flex;">
 			
+						
+		
+ </div><br><br><br><br>
 						<?php $results_per_page = 32;
 
 						if ($_GET["view"] == "list") { ?>
@@ -143,5 +156,3 @@ include ('includes/config.inc.php');
 		</body>
 
 		</html>
-
-
