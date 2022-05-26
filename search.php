@@ -90,14 +90,14 @@ include ('includes/config.inc.php');
 				<input hidden name="ctgr" value="<?php echo isset($_GET['ctgr']) ? $_GET['ctgr'] : ""; ?>">
 
 				<div style="padding-left: 5px;">
-				<select class="custom-select" id="inputType" name="experience_level" style="margin-left:225px;">
+				<select class="custom-select" id="inputExp" name="experience_level" style="margin-left:225px;">
 					<option value="" selected >Experience level</option>
 					<option value="junior">Junior</option>
 		          	<option value="mid">Mid</option>
 		          	<option value="senior">Senior</option>
 				</select>
 				<select class="custom-select" id="inputType" name="workplace_type">
-					<option value="" selected >Any Type</option>
+					<option value="" selected >Work Type</option>
 					<option value="remote">Fully Remote</option>
 		          	<option value="partly_remote">Hybrid</option>
 		          	<option value="office">Office</option>
@@ -157,14 +157,14 @@ include ('includes/config.inc.php');
 
 							if (isset ($_GET['workplace_type']) && $_GET['workplace_type'] != ''){
 								if (substr($sql, -6) === "WHERE "){
-									$sql .= " workplace_type = '".$_GET['workplace_type']." "; }
-								else { $sql .= " AND workplace_type = '".$_GET['workplace_type']." "; }
+									$sql .= " workplace_type = '".$_GET['workplace_type']."' "; }
+								else { $sql .= " AND workplace_type = '".$_GET['workplace_type']."' "; }
 							}
 
 							if (isset ($_GET['experience_level']) && $_GET['experience_level'] != ''){
 								if (substr($sql, -6) === "WHERE "){
-									$sql .= " experience_level = '".$_GET['experience_level']." "; }
-								else { $sql .= " AND experience_level = '".$_GET['experience_level']." "; }
+									$sql .= " experience_level = '".$_GET['experience_level']."' "; }
+								else { $sql .= " AND experience_level = '".$_GET['experience_level']."' "; }
 							}
 
 							if (isset ($_GET['order']) && $_GET['order'] != ''){
@@ -189,7 +189,7 @@ include ('includes/config.inc.php');
 							$sql .= " LIMIT " . $first_result . ',' . $results_per_page;
 							
 							$result = mysqli_query($conn, $sql);
-							//echo $sql;
+
 							while($row = mysqli_fetch_array($result)) {
 
 								$offer_id = $row['offer_id'];
@@ -257,7 +257,7 @@ include ('includes/config.inc.php');
 						</section> </center><?php } 
 
 						else if ($_GET["view"] == "gallery") { ?><br><br>
-							<h2><center> Sorry bud, devs' too lazy </center></h2>
+							<h2><center> Sorry bud, devs too lazy </center></h2>
 						<?php } ?></div> 
 				</div> 
 
