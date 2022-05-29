@@ -9,7 +9,7 @@
 			<div class="collapse navbar-collapse" id="menu_glowne">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a class="nav-link" href="visualisation.php" style="margin-right:25px;">
+						<a class="nav-link" href="https://dashjobfinder.herokuapp.com" style="margin-right:25px;">
 							Visualisations
 						</a>
 					</li>
