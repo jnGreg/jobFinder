@@ -1,13 +1,17 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 import json
 from datetime import datetime, timedelta
 import pandas as pd
 import urllib
 from urllib.request import urlopen
+import pymysql
 
 
-
-def get_current_offers(url: str) -> None:
+def parse_new_offers(url: str) -> None:
+    """get new json file from url """
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     response = urllib.request.urlopen(req)
     data_json = json.loads(response.read())
@@ -16,199 +20,220 @@ def get_current_offers(url: str) -> None:
         json.dump(data_json, f)
 
 
-# TODO id -> link -> parse body -> add describe offers_to_insert
-def get_new_offers_to_insert(new_job_offers: list, current_id_status: pd.core.frame.DataFrame,
-                             time_crawled: datetime):
-    offers_to_insert = []
-    new_id_status = []
+def get_new_active_offers():
+    """get new offers to insert and create temp df offers to insert and get active offers id to update"""
+    time_crawled = datetime.now()
+    new_job_offers = json.load(open('data/job_offers.json'))
+    current_active_id_status = pd.read_csv('data/current_active_id_status.csv')
     temp_new_id = [new_job_offers[index]['id'] for index, _ in enumerate(new_job_offers)]
+    offers_to_insert = []
+    offers_to_update = []
+    new_active_id_status = []
     for index, new_id in enumerate(temp_new_id):
-        if new_id in current_id_status['id'].values:
-            # TODO jakos to co mam z tym co jest teraz czy jest to samo
-            # offers_to_ver.append() -> tabelka -> kazdy row sprawdzic z uniq_id if inne dodaj if not pass
-            new_id_status.append({'id': new_id,
-                                  'status': 'active',
-                                  'parsed_time': time_crawled,
-                                  'display_offer': new_job_offers[index]['display_offer']})
+        if new_id in current_active_id_status['id'].values:
+            offers_to_update.append(new_id)
+            new_active_id_status.append({'id': new_id,
+                                         'status': 'active',
+                                         'parsed_time': time_crawled,
+                                         'display_offer': new_job_offers[index]['display_offer']})
 
 
         else:
             offers_to_insert.append(new_job_offers[index])
-            new_id_status.append({'id': new_id,
-                                  'status': 'active',
-                                  'parsed_time': time_crawled,
-                                  'display_offer': new_job_offers[index]['display_offer']})
+            new_active_id_status.append({'id': new_id,
+                                         'status': 'active',
+                                         'parsed_time': time_crawled,
+                                         'display_offer': new_job_offers[index]['display_offer']})
 
-    active = pd.DataFrame(new_id_status)
-
-    active.to_csv('data/active.csv')
+    active = pd.DataFrame(new_active_id_status)
+    active.to_csv('data/current_active_id_status.csv')
     offers_to_insert = pd.DataFrame(offers_to_insert)
     offers_to_insert.to_csv('data/offers_to_insert.csv')
 
+    offers_to_update = [str(x) for x in offers_to_update]
 
-def get_offers_id_expired(active: pd.core.frame.DataFrame,
-                          expired_id_status: pd.core.frame.DataFrame) -> list:
-    new_expired_id_status = []
-    offers_id_to_update_status_to_expired = []
-
-    for index, old_id in enumerate(current_id_status['id'].values):
-        if old_id not in current_id_status['id'].values:
-            offers_id_to_update_status_to_expired.append(old_id)
-            new_expired_id_status.append(
-                {'id': old_id,
-                 'status': 'expired',
-                 'parsed_time': current_id_status.loc[[index]]['parsed_time']})
-
-    new_expired = pd.DataFrame(new_expired_id_status)
-    print(new_expired)
-    print('przed appended')
-    if len(new_expired) > 0:
-        expired_id_status.append(new_expired)
-
-    expired_id_status
-    print('przed zapisem')
-    expired_id_status.to_csv('data/expired.csv')
-
-    return offers_id_to_update_status_to_expired
+    return time_crawled, offers_to_update, offers_to_insert
 
 
-# type  strig to list of dicts
-def df_column_string_to_list(df: pd.core.frame.DataFrame, col_name: str) -> pd.core.frame.DataFrame:
-    """2 columns id, and col in form of str([{}])"""
-    temp_list_of_tuples = []
+def insert_data_parsed_information(offers_to_update, offers_to_insert) -> None:
+    """insert into table information about number of active offer, new offer, last time parser"""
 
-    for x in zip(df['offer_id'], df[col_name]):
-        temp_list_of_tuples.append((x[0], list(eval(x[1]))))
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 port='',
+                                 password='',
+                                 db='jobfinder',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
 
-    new_df = pd.DataFrame(temp_list_of_tuples, columns=['offer_id', col_name])
-    return new_df
+        with connection.cursor() as cursor:
+            sqlQuery = f"""INSERT INTO `crawler_status` (time_parsed, active_len, new_len)
+                          VALUES (CURRENT_TIMESTAMP(), {len(offers_to_update) + len(offers_to_insert)},{len(offers_to_insert)} )"""
 
+            cursor.execute(sqlQuery)
+            connection.commit()
 
-# Replace NaN by empty dict
-def replace_nans_with_dict(series: pd.core.frame.DataFrame):
-    for idx in series[series.isnull()].index:
-        series.at[idx] = {}
-    return series
-
-
-# Explodes list and dicts
-def df_explosion(df: pd.core.frame.DataFrame, col_name: str) -> pd.core.frame.DataFrame:
-    if df[col_name].isna().any():
-        df[col_name] = replace_nans_with_dict(df[col_name])
-
-    df.reset_index(drop=True, inplace=True)
-
-    df1 = pd.DataFrame(df.loc[:, col_name].values.tolist())
-
-    df = pd.concat([df, df1], axis=1)
-
-    df.drop([col_name], axis=1, inplace=True)
-
-    return df
+    finally:
+        connection.close()
 
 
-def create_offers_to_insert_location(offers_to_insert: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
-    jobs_locations = offers_to_insert[['offer_id', 'multilocation']]
-    jobs_locations = df_column_string_to_list(jobs_locations, 'multilocation')
-    jobs_locations = jobs_locations.explode('multilocation')
-    jobs_locations.reset_index(drop=True, inplace=True)
-    jobs_locations = df_explosion(jobs_locations, 'multilocation')
-    #     jobs_locations=jobs_locations.merge(city_woj, left_on='city', right_on='nazwa miasta')
-    #     jobs_locations.drop(['slug', 'city'], axis=1)
-    return jobs_locations
+def update_active_offer_time_parsed(offers_to_update) -> None:
+    
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 port='',
+                                 password='',
+                                 db='jobfinder',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
 
+        with connection.cursor() as cursor:
+            sqlQuery = f"""
+                            UPDATE offers
+                            SET time_parsed = current_timestamp(), status='active'
+                            WHERE jj_id IN {tuple(offers_to_update)};"""
 
-def create_offers_to_insert_skills(offers_to_insert: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
-    jobs_skills = offers_to_insert[['offer_id', 'skills']]
-    jobs_skills = df_column_string_to_list(jobs_skills, 'skills')
-    jobs_skills = jobs_skills.explode('skills')
-    jobs_skills.reset_index(drop=True, inplace=True)
-    jobs_skills = df_explosion(jobs_skills, 'skills')
-    return jobs_skills
+            cursor.execute(sqlQuery)
+            connection.commit()
 
-
-def create_offers_to_insert_empl_type(offers_to_insert: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
-    jobs_empl_types = offers_to_insert[['offer_id', 'employment_types']]
-    jobs_empl_types = df_column_string_to_list(jobs_empl_types, 'employment_types')
-    jobs_empl_types = jobs_empl_types.explode('employment_types')
-    jobs_empl_types.reset_index(drop=True, inplace=True)
-    jobs_empl_types = df_explosion(jobs_empl_types, 'employment_types')
-    jobs_empl_types = df_explosion(jobs_empl_types, 'salary')
-    return jobs_empl_types
-
-
-# Load data
-get_current_offers(url = "https://justjoin.it/api/offers")
-
-# Time
-time_crawled = datetime.now()
-
-# Crawled data
-new_job_offers = json.load(open('data/job_offers.json'))
-expired_id_status = pd.read_csv('data/expired.csv')
-current_id_status = pd.read_csv('data/active.csv')
-
-get_new_offers_to_insert(new_job_offers, current_id_status, time_crawled)
-current_id_status = pd.read_csv('data/active.csv')
-offers_id_to_update_status_to_expired = get_offers_id_expired(current_id_status, expired_id_status)
-
-# CHwilowo
-
-current_json = pd.json_normalize(new_job_offers)
-
-## Raw data with uniq offers in csv format from 24.04 to 08.05
-current_json.to_csv('data/temp_joboffers.csv')
-offers_to_insert = pd.read_csv('data/temp_joboffers.csv')
-
-if len(offers_to_insert) > 0:
-    print('dziala')
-    offers_to_insert.insert(0, 'offer_id', offers_to_insert['id'])
-    #     locations=create_offers_to_insert_location(offers_to_insert)
-    skills = create_offers_to_insert_skills(offers_to_insert)
-    empl_type = create_offers_to_insert_empl_type(offers_to_insert)
-    offers_to_insert = offers_to_insert.drop(
-        ['Unnamed: 0', 'latitude', 'longitude', 'employment_types', 'skills', 'multilocation', 'id'], axis=1)
-
-# TODO nie dziala naprawić sprawdzanie expired po czasie albio po czymś
-# if zmianty to starszy na unactive młodszy active dla 1 jj_id 1 active
-# if len(offers_id_to_update_status_to_expired)>0:
-#     print('zmień id dla tego zawodnika')
-#     print(offers_id_to_update_status_to_expired)
-
-
-# import the module
-from sqlalchemy import create_engine
-
-# offers_to_insert=pd.read_csv('data/temp_offers_to_insert.csv')
-
-# # create sqlalchemy engine
-# engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
-#                        .format(user="root",
-#                                pw="",
-#                                db="jobfinder"))
-#
-# # offers_to_insert=offers_to_insert.reset_index(drop=True)
-#
-# # offers_to_insert
-# # offers_to_insert.to_sql('offers', con = engine, if_exists = 'append', chunksize = 1000, index= False)
-#
-#
-# # empl_type.columns
-#
-# offers_to_insert.insert(0, 'jj_id', offers_to_insert['offer_id'])
-# offers_to_insert = offers_to_insert.drop('offer_id', axis=1)
-# offers_to_insert = offers_to_insert.reset_index(drop=True)
-# offers_to_insert.to_sql('offers', con=engine, if_exists='append', chunksize=1000, index=False)
-#
-# skills.insert(0, 'jj_id', skills['offer_id'])
-# skills = skills.drop('offer_id', axis=1)
-# skills = skills.reset_index(drop=True)
-# skills.to_sql('skills', con=engine, if_exists='append', chunksize=1000, index=False)
-#
-# empl_type.insert(0, 'jj_id', empl_type['offer_id'])
-# empl_type = empl_type.drop('offer_id', axis=1)
-# empl_type = empl_type.reset_index(drop=True)
-# empl_type.to_sql('employment', con=engine, if_exists='append', chunksize=1000, index=False)
+    finally:
+        connection.close()
 
 
 
+
+
+def create_skills_to_insert(offers_to_insert: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
+    skills_to_insert = offers_to_insert[['offer_id', 'skills']]
+    skills_to_insert = df_column_string_to_list(skills_to_insert, 'skills')
+    skills_to_insert = skills_to_insert.explode('skills')
+    skills_to_insert.reset_index(drop=True, inplace=True)
+    skills_to_insert = df_explosion(skills_to_insert, 'skills')
+    return skills_to_insert
+
+
+def create_empl_type_to_insert(offers_to_insert: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
+    emply_type_to_insert = offers_to_insert[['offer_id', 'employment_types']]
+    emply_type_to_insert = df_column_string_to_list(emply_type_to_insert, 'employment_types')
+    emply_type_to_insert = emply_type_to_insert.explode('employment_types')
+    emply_type_to_insert.reset_index(drop=True, inplace=True)
+    emply_type_to_insert = df_explosion(emply_type_to_insert, 'employment_types')
+    emply_type_to_insert = df_explosion(emply_type_to_insert, 'salary')
+    return emply_type_to_insert
+
+
+def insert_new_offers_skills_eply_type(offers_to_insert: pd.core.frame.DataFrame,
+                                       skills_to_insert: pd.core.frame.DataFrame,
+                                       emply_type_to_insert: pd.core.frame.DataFrame) -> None:
+    # empl_type.columns
+    # create sqlalchemy engine
+    engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
+                           .format(user="root",
+                                   pw="",
+                                   db="jobfinder"))
+
+    offers_to_insert.insert(0, 'jj_id', offers_to_insert['offer_id'])
+    offers_to_insert = offers_to_insert.drop('offer_id', axis=1)
+    offers_to_insert = offers_to_insert.reset_index(drop=True)
+    offers_to_insert.to_sql('offers', con=engine, if_exists='append', chunksize=1000, index=False)
+
+    skills_to_insert.insert(0, 'jj_id', skills_to_insert['offer_id'])
+    skills_to_insert = skills_to_insert.drop('offer_id', axis=1)
+    skills_to_insert = skills_to_insert.reset_index(drop=True)
+    skills_to_insert.to_sql('skills', con=engine, if_exists='append', chunksize=1000, index=False)
+
+    emply_type_to_insert.insert(0, 'jj_id', emply_type_to_insert['offer_id'])
+    emply_type_to_insert = emply_type_to_insert.drop('offer_id', axis=1)
+    emply_type_to_insert = emply_type_to_insert.reset_index(drop=True)
+    emply_type_to_insert.to_sql('employment', con=engine, if_exists='append', chunksize=1000, index=False)
+
+
+def update_offers_city_category_voivode_id():
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 port='',
+                                 password='',
+                                 db='jobfinder',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
+
+        with connection.cursor() as cursor:
+            sqlQuery = f"""
+                    UPDATE offers 
+                    SET city_id =(SELECT city_id FROM cities WHERE offers.city=cities.city AND offers.city_id IS NULL),
+                        voivodeship_id=(SELECT voivodeship_id FROM cities WHERE offers.city=cities.city AND offers.voivodeship_id IS NULL),
+                        ctgr_id=(SELECT ctgr_id FROM ctgrs WHERE offers.marker_icon=ctgrs.category AND offers.ctgr_id IS NULL)"""
+
+            cursor.execute(sqlQuery)
+            connection.commit()
+
+    finally:
+        connection.close()
+
+def update_expired_offer_time_parsed() -> None:
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 port='',
+                                 password='',
+                                 db='jobfinder',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
+
+        with connection.cursor() as cursor:
+            sqlQuery = f"""
+                    UPDATE offers
+                    SET status='expired'
+                    WHERE NOT time_parsed BETWEEN SYSDATE() - INTERVAL 2 HOUR AND SYSDATE(); """
+
+            cursor.execute(sqlQuery)
+            connection.commit()
+
+    finally:
+        connection.close()
+
+def arch_expired_offers() -> None:
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 port='',
+                                 password='',
+                                 db='jobfinder',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
+
+        with connection.cursor() as cursor:
+            sqlQuery = f"""
+                    INSERT INTO expired_offers
+                    SELECT * FROM offers
+                    WHERE status='expired'; """
+            cursor.execute(sqlQuery)
+
+            # sqlQuery1 = f"""
+            #         DELETE FROM offers
+            #         WHERE status ='expired'; """
+            # cursor.execute(sqlQuery1)
+
+            connection.commit()
+
+    finally:
+        connection.close()
+
+
+def main():
+    parse_new_offers(url="https://justjoin.it/api/offers")
+    time_crawled, offers_to_update, offers_to_insert = get_new_active_offers()
+    insert_data_parsed_information(offers_to_update, offers_to_insert)
+    update_active_offer_time_parsed(offers_to_update)
+
+    if len(offers_to_insert) > 0:
+        print('new offers: '+str(len(offers_to_insert)))
+        skills_to_insert = create_skills_to_insert(offers_to_insert)
+        emply_type_to_insert = create_empl_type_to_insert(offers_to_insert)
+        insert_new_offers_skills_eply_type(offers_to_insert, skills_to_insert, emply_type_to_insert)
+        update_offers_city_category_voivode_id()
+
+    update_expired_offer_time_parsed()
+    arch_expired_offers()
+
+
+if __name__ == '__main__':
+    main()
