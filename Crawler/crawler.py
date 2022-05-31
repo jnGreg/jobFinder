@@ -158,8 +158,7 @@ def create_empl_type_to_insert(offers_to_insert: pd.core.frame.DataFrame) -> pd.
 def insert_new_offers_skills_eply_type(offers_to_insert: pd.core.frame.DataFrame,
                                        skills_to_insert: pd.core.frame.DataFrame,
                                        emply_type_to_insert: pd.core.frame.DataFrame) -> None:
-    # empl_type.columns
-    # create sqlalchemy engine
+
     engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
                            .format(user="root",
                                    pw="",
@@ -182,7 +181,6 @@ def insert_new_offers_skills_eply_type(offers_to_insert: pd.core.frame.DataFrame
 
 
 def update_offers_city_category_voivode_id():
-    print('update_offers')
     connection = pymysql.connect(host='localhost',
                                  user='root',
                                  port='',
@@ -253,15 +251,15 @@ def arch_expired_offers() -> None:
 
 
 def main():
-    # parse_new_offers(url="https://justjoin.it/api/offers")
+    parse_new_offers(url="https://justjoin.it/api/offers")
     time_crawled, offers_to_update, offers_to_insert = get_new_active_offers()
     insert_data_parsed_information(offers_to_update, offers_to_insert)
     update_active_offer_time_parsed(offers_to_update)
 
+    offers_to_insert=pd.read_csv('data/offers_to_insert.csv')
+    offers_to_insert = offers_to_insert.drop(['Unnamed: 0'], axis=1)
 
     if len(offers_to_insert) > 0:
-        print(len(offers_to_insert))
-        print('new offers: '+str(len(offers_to_insert)))
         offers_to_insert.insert(0, 'offer_id', offers_to_insert['id'])
         skills_to_insert = create_skills_to_insert(offers_to_insert)
         emply_type_to_insert = create_empl_type_to_insert(offers_to_insert)
@@ -269,10 +267,7 @@ def main():
             ['latitude', 'longitude', 'employment_types', 'skills', 'multilocation', 'id'], axis=1)
         insert_new_offers_skills_eply_type(offers_to_insert, skills_to_insert, emply_type_to_insert)
         update_offers_city_category_voivode_id()
-
     update_expired_offer_time_parsed()
-    # arch_expired_offers()
-
 
 if __name__ == '__main__':
     main()
