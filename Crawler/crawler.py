@@ -193,10 +193,29 @@ def update_offers_city_category_voivode_id():
             sqlQuery = f"""
                     UPDATE offers 
                     SET city_id =(SELECT city_id FROM cities WHERE offers.city=cities.city AND offers.city_id IS NULL),
-                        voivodeship_id=(SELECT voivodeship_id FROM cities WHERE offers.city=cities.city AND offers.voivodeship_id IS NULL),
-                        ctgr_id=(SELECT ctgr_id FROM ctgrs WHERE offers.marker_icon=ctgrs.category AND offers.ctgr_id IS NULL)"""
+                        voivodeship_id=(SELECT voivodeship_id FROM cities WHERE offers.city=cities.city AND offers.voivodeship_id IS NULL)"""
 
             cursor.execute(sqlQuery)
+            sqlQuery1 = f"""
+                    UPDATE offers 
+                    SET city_id = 0,
+                        voivodeship_id=0
+                    WHERE city_id is NULL
+                    """
+            cursor.execute(sqlQuery1)
+
+
+            sqlQuery2 = f"""
+                    UPDATE offers 
+                    SET ctgr_id=(SELECT ctgr_id FROM ctgrs WHERE offers.marker_icon=ctgrs.category )"""
+            cursor.execute(sqlQuery2)
+
+            sqlQuery2 = f"""
+                    UPDATE offers 
+                    SET status='active'
+                    WHERE status IS NULL """
+            cursor.execute(sqlQuery2)
+
             connection.commit()
 
     finally:
@@ -266,7 +285,8 @@ def main():
         offers_to_insert = offers_to_insert.drop(
             ['latitude', 'longitude', 'employment_types', 'skills', 'multilocation', 'id'], axis=1)
         insert_new_offers_skills_eply_type(offers_to_insert, skills_to_insert, emply_type_to_insert)
-        update_offers_city_category_voivode_id()
+
+    update_offers_city_category_voivode_id()
     update_expired_offer_time_parsed()
 
 if __name__ == '__main__':
