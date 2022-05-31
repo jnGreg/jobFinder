@@ -8,7 +8,7 @@ import pandas as pd
 import urllib
 from urllib.request import urlopen
 import pymysql
-
+from sqlalchemy import create_engine
 
 def parse_new_offers(url: str) -> None:
     """get new json file from url """
@@ -100,6 +100,39 @@ def update_active_offer_time_parsed(offers_to_update) -> None:
         connection.close()
 
 
+# type  strig to list of dicts
+def df_column_string_to_list(df: pd.core.frame.DataFrame, col_name: str) -> pd.core.frame.DataFrame:
+    """2 columns id, and col in form of str([{}])"""
+    temp_list_of_tuples = []
+
+    for x in zip(df['offer_id'], df[col_name]):
+        temp_list_of_tuples.append((x[0], list(eval(x[1]))))
+
+    new_df = pd.DataFrame(temp_list_of_tuples, columns=['offer_id', col_name])
+    return new_df
+
+
+# Replace NaN by empty dict
+def replace_nans_with_dict(series: pd.core.frame.DataFrame):
+    for idx in series[series.isnull()].index:
+        series.at[idx] = {}
+    return series
+
+
+# Explodes list and dicts
+def df_explosion(df: pd.core.frame.DataFrame, col_name: str) -> pd.core.frame.DataFrame:
+    if df[col_name].isna().any():
+        df[col_name] = replace_nans_with_dict(df[col_name])
+
+    df.reset_index(drop=True, inplace=True)
+
+    df1 = pd.DataFrame(df.loc[:, col_name].values.tolist())
+
+    df = pd.concat([df, df1], axis=1)
+
+    df.drop([col_name], axis=1, inplace=True)
+
+    return df
 
 
 
@@ -149,6 +182,7 @@ def insert_new_offers_skills_eply_type(offers_to_insert: pd.core.frame.DataFrame
 
 
 def update_offers_city_category_voivode_id():
+    print('update_offers')
     connection = pymysql.connect(host='localhost',
                                  user='root',
                                  port='',
@@ -207,10 +241,10 @@ def arch_expired_offers() -> None:
                     WHERE status='expired'; """
             cursor.execute(sqlQuery)
 
-            # sqlQuery1 = f"""
-            #         DELETE FROM offers
-            #         WHERE status ='expired'; """
-            # cursor.execute(sqlQuery1)
+            sqlQuery1 = f"""
+                    DELETE FROM offers
+                    WHERE status ='expired'; """
+            cursor.execute(sqlQuery1)
 
             connection.commit()
 
@@ -219,20 +253,25 @@ def arch_expired_offers() -> None:
 
 
 def main():
-    parse_new_offers(url="https://justjoin.it/api/offers")
+    # parse_new_offers(url="https://justjoin.it/api/offers")
     time_crawled, offers_to_update, offers_to_insert = get_new_active_offers()
     insert_data_parsed_information(offers_to_update, offers_to_insert)
     update_active_offer_time_parsed(offers_to_update)
 
+
     if len(offers_to_insert) > 0:
+        print(len(offers_to_insert))
         print('new offers: '+str(len(offers_to_insert)))
+        offers_to_insert.insert(0, 'offer_id', offers_to_insert['id'])
         skills_to_insert = create_skills_to_insert(offers_to_insert)
         emply_type_to_insert = create_empl_type_to_insert(offers_to_insert)
+        offers_to_insert = offers_to_insert.drop(
+            ['latitude', 'longitude', 'employment_types', 'skills', 'multilocation', 'id'], axis=1)
         insert_new_offers_skills_eply_type(offers_to_insert, skills_to_insert, emply_type_to_insert)
         update_offers_city_category_voivode_id()
 
     update_expired_offer_time_parsed()
-    arch_expired_offers()
+    # arch_expired_offers()
 
 
 if __name__ == '__main__':
