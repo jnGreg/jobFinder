@@ -16,6 +16,7 @@ ___
 - [Python] - Crawler/ scrapper programming language, version 3.10
 - [PHP] - website programming language, version 8.1.6
 - [re] - Build in python module for finding patterns in text 
+- [urllib] - a package that collects several modules for working with URLs 
 - [000Webhost] - Deploy for Crawler and Website 
 - [MySQL] - SQL db hosted on Heroku (Hobby Dev plan) 
 - [jQuery] - a fast, small, and feature-rich JavaScript library
@@ -28,6 +29,7 @@ ___
    [Python]: <https://www.python.org/downloads/>
    [PHP]: <https://www.php.net/downloads/>
    [re]: <https://docs.python.org/3/library/re.html>
+   [urllib]: <https://docs.python.org/3/library/re.html>
    [000Webhost]: <https://pl.000webhost.com>
    [MySQL]: <https://www.mysql.com/downloads/>
    [jQuery]: <https://jquery.com/download/>
