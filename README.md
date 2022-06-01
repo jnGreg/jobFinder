@@ -15,7 +15,6 @@ ___
 
 - [Python] - Crawler/ scrapper programming language, version 3.10
 - [PHP] - website programming language, version 8.1.6
-- [Scrapy] - Framework for extracting the data from websites.
 - [re] - Build in python module for finding patterns in text 
 - [000Webhost] - Deploy for Crawler and Website 
 - [MySQL] - SQL db hosted on Heroku (Hobby Dev plan) 
@@ -28,12 +27,9 @@ ___
 [//]: # (These are reference links http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
    [Python]: <https://www.python.org/downloads/>
    [PHP]: <https://www.php.net/downloads/>
-   [Scrapy]: <https://scrapy.org>
    [re]: <https://docs.python.org/3/library/re.html>
    [000Webhost]: <https://pl.000webhost.com>
    [MySQL]: <https://www.mysql.com/downloads/>
-   [React]: <https://pl.reactjs.org>
-   [Figma]: <https://www.figma.com/?fuid=>
    [jQuery]: <https://jquery.com/download/>
    [Bootstrap]: <https://getbootstrap.com>
    [W3.CSS]: <https://www.w3schools.com/w3css/defaulT.asp>
