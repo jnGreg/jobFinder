@@ -2,7 +2,8 @@
 
 
 ##  Project Description
-Jobfinder is an educational  project that scrapes job offers on https://justjoin.it 
+Jobfinder is an educational project that scrapes job offers on https://justjoin.it 
+The project can be found under https://jobfinderue.000webhostapp.com/ domain
 ___
 ## Features
 - List of available Job offers updated in real time.
